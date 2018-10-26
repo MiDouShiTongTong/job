@@ -12,6 +12,10 @@ module.exports = function override(config, env) {
     }
   ], config);
 
+  config = injectBabelPlugin([
+    'syntax-dynamic-import'
+  ], config);
+
   // scss
   config = rewireScss(config, env);
 
@@ -22,7 +26,7 @@ module.exports = function override(config, env) {
   config = rewireLess.withLoaderOptions({
     // ant design 默认主题颜色
     modifyVars: {
-      "@brand-primary": "#108ee9",
+      "@brand-primary": "#108ee9"
     }
   })(config, env);
 
