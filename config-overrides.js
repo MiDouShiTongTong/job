@@ -2,7 +2,6 @@ const { injectBabelPlugin } = require('react-app-rewired');
 const rewireScss = require('react-app-rewire-scss');
 const rewireLess = require('react-app-rewire-less-modules');
 
-
 module.exports = function override(config, env) {
   // babel 按需加载
   config = injectBabelPlugin([
