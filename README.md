@@ -11,5 +11,62 @@
     
 ## 笔记
   - react-router
-    - 路由懒加载 https://reacttraining.com/react-router/web/guides/code-splitting
-  
+
+      - 安装
+
+          - ```shell
+            npm install --save react-router-dom
+            ```
+
+    - 路由懒加载
+
+      -  https://reacttraining.com/react-router/web/guides/code-splitting
+
+- redux
+
+  - github
+
+    - ```shell
+      npm install --save redux react-redux redux-thunk
+      ```
+
+  - redux 的三大原则
+
+    - https://www.redux.org.cn/docs/introduction/ThreePrinciples.html
+
+  - 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
