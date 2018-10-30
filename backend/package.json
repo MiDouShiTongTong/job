@@ -9,7 +9,7 @@
   "scripts": {
     "start": "egg-scripts start --daemon --title=egg-server-backend",
     "stop": "egg-scripts stop --title=egg-server-backend",
-    "dev": "egg-bin dev -r egg-ts-helper/register",
+    "dev": "egg-bin dev --port=8002 -r egg-ts-helper/register",
     "debug": "egg-bin debug -r egg-ts-helper/register",
     "test-local": "egg-bin test -r egg-ts-helper/register",
     "test": "npm run lint -- --fix && npm run test-local",
@@ -24,6 +24,9 @@
     "egg": "^2.6.1",
     "egg-scripts": "^2.6.0",
     "egg-sequelize": "^4.1.0",
+    "egg-shell-decorators": "^1.0.7",
+    "egg-validate": "^2.0.2",
+    "md5-typescript": "^1.0.5",
     "mysql2": "^1.6.1"
   },
   "devDependencies": {

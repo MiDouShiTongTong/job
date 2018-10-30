@@ -10,7 +10,7 @@ export default class SignUp extends React.Component {
       username: '',
       password: '',
       confirmPassword: '',
-      type: '1'
+      type: '2'
     },
     // 表单验证规则
     signUpFormValidator: new AsyncValidator({
