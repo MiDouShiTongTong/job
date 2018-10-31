@@ -2,8 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Loadable from 'react-loadable';
 // Provider 是 react-redux 两个核心工具之一
-// 用于将 store 传递到每个项目的组件中
+// 用于将 redux store 传递到每个项目的组件中
 import { Provider } from 'react-redux';
+// 引入 redux store
 import store from '@/store';
 import '@/App.scss';
 

@@ -3,7 +3,12 @@ import { Context } from "egg";
 module.exports = () => {
   return async function errorHandler(ctx: Context, next: any) {
     try {
-      await next();
+      return new Promise(resolve => {
+        setTimeout(async () => {
+          await next();
+          resolve();
+        }, 1000);
+      });
     } catch (error) {
       console.log(error);
       // 清空响应体

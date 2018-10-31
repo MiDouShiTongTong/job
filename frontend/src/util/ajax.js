@@ -55,6 +55,8 @@ export default function ajax(method = 'GET', url, data = {}) {
             url,
             data
           });
+          break;
+        default:
       }
       resolve(response.data);
     } catch (e) {

@@ -28,14 +28,14 @@ export default class AccountController extends Controller {
       }
     });
     if (user) {
-      // 用户已存在
+      // 用户名已被注册
       response(this.ctx, {
         header: {
           status: 200
         },
         body: {
           code: '1',
-          message: '用户已存在'
+          message: '用户名已被注册'
         }
       });
     } else {
