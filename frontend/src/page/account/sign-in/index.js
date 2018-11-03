@@ -19,12 +19,12 @@ export default connect(
   class SignIn extends React.Component {
     state = {
       // 表单值
-      signInForm: {
+      signInFormValue: {
         username: '',
         password: ''
       },
       // 表单验证规则
-      signInFormValidator: new AsyncValidator({
+      validateSignInFormValue: new AsyncValidator({
         username: [
           { required: true, message: '请输入用户名' },
           { min: 3, max: 20, message: '用户名由3-20个字符组成' }
@@ -37,34 +37,36 @@ export default connect(
     };
 
     // 处理所有表单的 change 事件
-    changeFormValue = (name, value) => {
-      const { signInForm } = this.state;
-      signInForm[name] = value;
+    changeSignInFormValue = (name, value) => {
+      const { state } = this;
+      state.signInFormValue[name] = value;
       this.setState({
-        signInForm
+        signInFormValue: state.signInFormValue
       });
     };
 
     // 处理注册按钮
     signIn = () => {
+      const { state, props } = this;
       // 验证
-      this.state.signInFormValidator.validate(this.state.signInForm, async errors => {
+      state.validateSignInFormValue.validate(state.signInFormValue, async errors => {
         if (errors) {
           Toast.info(errors[0].message, 1, null, false);
         } else {
           Toast.loading('Loading...', 0);
           // 请求登陆接口
+          const { username, password } = state.signInFormValue;
           const result = await api.account.signIn({
-            username: this.state.signInForm.username,
-            password: this.state.signInForm.password
+            username,
+            password
           });
           if (result.code === '0') {
             // 保存用户信息到 redux
-            this.props.updateUserInfo(result.data);
+            props.updateUserInfo(result.data);
             Toast.success('登陆成功 跳转中...', 3, null, true);
             // 跳转到首页
             setTimeout(() => {
-              this.props.history.push('/');
+              props.history.push('/');
             }, 3000);
           } else {
             Toast.fail(result.message, 1.5, null, false);
@@ -74,23 +76,24 @@ export default connect(
     };
 
     render() {
+      const { state, props } = this;
       return (
         <section className="sign-in-container">
-          <NavBar>直聘</NavBar>
+          <NavBar>登陆账户</NavBar>
           <Logo/>
           <WingBlank size="lg">
             <List renderHeader={() => '基本信息'}>
               <InputItem
                 type="text"
                 placeholder="请输入用户名"
-                defaultValue={this.state.signInForm.username}
-                onChange={(value) => this.changeFormValue('username', value)}
+                defaultValue={state.signInFormValue.username}
+                onChange={(value) => this.changeSignInFormValue('username', value)}
               >用户名</InputItem>
               <InputItem
                 type="password"
                 placeholder="请输入密码"
-                defaultValue={this.state.signInForm.password}
-                onChange={(value) => this.changeFormValue('password', value)}
+                defaultValue={state.signInFormValue.password}
+                onChange={(value) => this.changeSignInFormValue('password', value)}
               >密码</InputItem>
             </List>
             <WhiteSpace size="lg"/>
@@ -101,7 +104,7 @@ export default connect(
             <WhiteSpace size="md"/>
             <Button
               type="ghost"
-              onClick={() => this.props.history.push('/account/signUp')}
+              onClick={() => props.history.push('/account/signUp')}
             >没有账号? 立即注册</Button>
           </WingBlank>
         </section>

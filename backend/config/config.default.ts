@@ -31,6 +31,16 @@ export default (appInfo: EggAppInfo) => {
     maxAge: 24 * 3600 * 1000
   };
 
+  config.redis = {
+    client: {
+      host: '127.0.0.1',
+      port: '6379',
+      password: '',
+      db: '0',
+    },
+    agent: true
+  };
+
   // sequelize
   config.sequelize = {
     username: 'root',
@@ -39,7 +49,8 @@ export default (appInfo: EggAppInfo) => {
     host: '127.0.0.1',
     port: 3306,
     dialect: 'mysql',
-    operatorsAliases: false
+    operatorsAliases: false,
+    timezone: '+08:00'
   };
 
   return {

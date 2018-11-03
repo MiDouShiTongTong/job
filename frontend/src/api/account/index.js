@@ -22,6 +22,14 @@ export default {
       data
     );
   },
+  // 获取用户信息
+  selectUserInfo() {
+    return ajax(
+      'GET',
+      `${config.API_ROOT}/account/userInfo`,
+      {}
+    );
+  },
   // 修改用户信息
   updateUserInfo(data) {
     return ajax(

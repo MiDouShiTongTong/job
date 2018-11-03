@@ -39,13 +39,15 @@ export default function ajax(method = 'GET', url, data = {}) {
           response = await axios({
             method,
             url,
-            data,
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            transformRequest: [function () {
-              return dataStr;
-            }]
+            data
+          });
+          break;
+        case 'PUT':
+          // 发送 delete
+          response = await axios({
+            method,
+            url,
+            data
           });
           break;
         case 'DELETE':
@@ -57,6 +59,7 @@ export default function ajax(method = 'GET', url, data = {}) {
           });
           break;
         default:
+          console.log('类型错误');
       }
       resolve(response.data);
     } catch (e) {

@@ -1,4 +1,4 @@
-import { Instance, INTEGER, STRING, DATE } from "sequelize";
+import { Instance, INTEGER, STRING, DATE, TEXT } from "sequelize";
 import { Application } from 'egg';
 
 // ide 提示
@@ -36,7 +36,7 @@ const schema = {
   username: STRING(20),
   password: STRING(60),
   type: INTEGER,
-  avatar: STRING(50),
+  avatar: TEXT,
   position: STRING(50),
   description: STRING(50),
   company: STRING(50),

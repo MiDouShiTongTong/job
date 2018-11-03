@@ -1,6 +1,6 @@
 import { Service } from 'egg';
 import { UserModel } from '../model/user';
-import { FindOptions } from 'sequelize';
+import { FindOptions, UpdateOptions } from 'sequelize';
 
 /**
  * user Service
@@ -22,5 +22,15 @@ export default class User extends Service {
    */
   public async selectOne(findOption: FindOptions<any>) {
     return await this.app.model.User.findOne(findOption);
+  }
+
+  /**
+   * 修改用户数据
+   *
+   * @param data
+   * @param condition
+   */
+  public async update(data, condition: UpdateOptions) {
+    return await this.app.model.User.update(data, condition);
   }
 }

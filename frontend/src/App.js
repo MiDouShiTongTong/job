@@ -1,47 +1,66 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Loadable from 'react-loadable';
-// Provider 是 react-redux 两个核心工具之一
-// 用于将 redux store 传递到每个项目的组件中
-import { Provider } from 'react-redux';
-// 引入 redux store
-import store from '@/store';
+import { Toast } from 'antd-mobile';
+import { connect } from 'react-redux';
+import { asyncUpdateUserInfo } from '@/store/account';
+// 引入 router 组件
+import Router from '@/router';
+// 引入 material icon
+import 'material-icons/iconfont/material-icons.scss';
+// 引入全局 css
 import '@/App.scss';
 
-// 非路由组件
-import NotFound from '@/component/common/error/NotFound';
-import Loading from '@/component/common/loading';
-
-// 路由组件
-const Home = Loadable({
-  loader: () => import('@/page/home'),
-  loading: Loading
-});
-const SignUp = Loadable({
-  loader: () => import('@/page/account/sign-up'),
-  loading: Loading
-});
-const SignIn = Loadable({
-  loader: () => import('@/page/account/sign-in'),
-  loading: Loading
-});
-
-export default class App extends React.Component {
-  render() {
-    return (
-      <main>
-        {/* 将 store 作为 prop 传入, 即可在所有组件中使用 store */}
-        <Provider store={store}>
-          <Router>
-            <Switch>
-              <Route path="/" exact component={Home}/>
-              <Route path="/account/signUp" component={SignUp}/>
-              <Route path="/account/signIn" component={SignIn}/>
-              <Route component={NotFound}/>
-            </Switch>
-          </Router>
-        </Provider>
-      </main>
-    );
+export default connect(
+  state => {
+    // mapStateToProps
+    return {
+      userInfo: state.account.userInfo
+    };
+  },
+  // mapDispatchToProps
+  {
+    asyncUpdateUserInfo
   }
-}
+)(
+  class App extends React.Component {
+    state = {
+      initComplete: false
+    };
+
+    constructor(props) {
+      super(props);
+      this.initAppState();
+    }
+
+    // 初始化应用状态
+    initAppState = async () => {
+      const { props } = this;
+
+      // 初始化操作 - 开始
+      Toast.loading('Loading...', 0);
+
+      // 初始化用户信息
+      await props.asyncUpdateUserInfo();
+
+      Toast.hide();
+      // 初始化操作 - 结束
+
+      // 初始化完成, 渲染路由组件
+      this.setState({
+        initComplete: true
+      });
+    };
+
+    render() {
+      const { state } = this;
+      if (state.initComplete) {
+        // 初始化应用状态完成, 渲染路由组件
+        return (
+          <Router/>
+        );
+      } else {
+        // 初始化应用状态未完成, 不渲染路由组件
+        return null;
+      }
+    }
+  }
+);

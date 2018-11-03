@@ -1,3 +1,5 @@
+import api from '@/api';
+
 // action type
 // action type 用于定义修改状态的名称
 const UPDATE_USER_INFO = 'updateUserInfo';
@@ -31,6 +33,21 @@ export const updateUserInfo = (userInfo) => {
     type: UPDATE_USER_INFO,
     data: {
       userInfo
+    }
+  };
+};
+
+export const asyncUpdateUserInfo = () => {
+  return async dispatch => {
+    const result = await api.account.selectUserInfo();
+    if (result.code === '0') {
+      // 更细用户信息
+      dispatch({
+        type: UPDATE_USER_INFO,
+        data: {
+          userInfo: result.data
+        }
+      });
     }
   };
 };
