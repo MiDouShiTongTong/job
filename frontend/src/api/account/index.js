@@ -22,6 +22,14 @@ export default {
       data
     );
   },
+  // 退出
+  signOut() {
+    return ajax(
+      'GET',
+      `${config.API_ROOT}/account/signOut`,
+      {}
+    );
+  },
   // 获取用户信息
   selectUserInfo() {
     return ajax(

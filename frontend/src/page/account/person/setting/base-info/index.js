@@ -69,9 +69,9 @@ export default connect(
             // 保存用户信息到 redux
             props.updateUserInfo(result.data);
             Toast.success('保存成功 跳转中...', 3, null, true);
-            // 跳转用户页面
+            // 跳转到首页
             setTimeout(() => {
-              props.history.push('/account/person');
+              props.history.push('/');
             }, 3000);
           } else {
             Toast.fail(result.message, 1.5, null, false);

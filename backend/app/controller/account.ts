@@ -116,6 +116,21 @@ export default class AccountController extends Controller {
     }
   }
 
+  @Get('/signOut')
+  public async signOut() {
+    const { ctx } = this;
+    // 清空 session
+    ctx.session.userId = null;
+    response(ctx, {
+      header: {
+        status: 200
+      },
+      body: {
+        code: '0'
+      }
+    });
+  }
+
   @Get('/userInfo')
   public async selectUserInfo() {
     const { ctx, service } = this;
@@ -155,7 +170,7 @@ export default class AccountController extends Controller {
     const { ctx, service } = this;
     // 判断是否登陆
     permission.validateSignIn(ctx);
-    const userId  = ctx.session.userId;
+    const userId = ctx.session.userId;
     // 查找需要修改的用户
     const user = await service.user.selectOne({
       attributes: [

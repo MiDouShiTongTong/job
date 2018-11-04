@@ -6,7 +6,6 @@ import '@/component/home/footer/index.scss';
 export default withRouter(
   class HomeFooter extends React.Component {
     state = {
-      currentSelectPath: '',
       navList: [
         {
           path: '/home',
@@ -20,16 +19,10 @@ export default withRouter(
         },
         {
           path: '/home/account',
-          name: '123',
+          name: '个人中心',
           icon: 'account_circle'
         }
       ]
-    };
-
-    componentDidMount = () => {
-      this.setState({
-        currentSelectPath: this.props.location.pathname
-      });
     };
 
     render() {
@@ -47,11 +40,8 @@ export default withRouter(
                     title={nav.name}
                     icon={<span className="material-icons">{nav.icon}</span>}
                     selectedIcon={<span className="material-icons">{nav.icon}</span>}
-                    selected={state.currentSelectPath === nav.path}
+                    selected={this.props.location.pathname === nav.path}
                     onPress={() => {
-                      this.setState({
-                        currentSelectPath: nav.path
-                      });
                       // 跳转路由
                       props.history.push(nav.path);
                     }}

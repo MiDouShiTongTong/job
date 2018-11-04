@@ -25,6 +25,15 @@ export default class User extends Service {
   }
 
   /**
+   * 查找多个用户
+   *
+   * @param findOption
+   */
+  public async selectMany(findOption: FindOptions<any>) {
+    return await this.app.model.User.findAll(findOption);
+  }
+
+  /**
    * 修改用户数据
    *
    * @param data

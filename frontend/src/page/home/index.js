@@ -3,7 +3,6 @@ import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import permission from '@/util/permission';
 import Loadable from 'react-loadable';
-import AnimatedRouter from 'react-animated-router'; //我们的AnimatedRouter组件
 
 // 非路由组件
 import CommonErrorNotFound from '@/component/common/error/not-found';
@@ -66,7 +65,7 @@ export default connect(
       return (
         <div className="home-container">
           {/* 路由组件 */}
-          <AnimatedRouter>
+          <Switch>
             {
               state.routeList.map((route, index) => {
                 return <Route
@@ -79,7 +78,7 @@ export default connect(
             }
             {/* 404 */}
             <Route component={CommonErrorNotFound}/>
-          </AnimatedRouter>
+          </Switch>
           {/* 底部菜单 */}
           <HomeFooter/>
         </div>

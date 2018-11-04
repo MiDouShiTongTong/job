@@ -21,7 +21,6 @@ export default connect(
 
     componentDidMount = () => {
       const { props } = this;
-      console.log(props.userInfo);
       if (parseInt(props.userInfo.type) === 1) {
         this.setState({
           title: '企业'

@@ -5,7 +5,7 @@ export default class Loading extends React.Component {
   state = {};
 
   static getDerivedStateFromProps() {
-    // Toast.loading('Loading...');
+    Toast.loading('Loading...');
     return null;
   }
 

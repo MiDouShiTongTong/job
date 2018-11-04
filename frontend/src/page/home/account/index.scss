@@ -1,0 +1,22 @@
+.home-account-container {
+  .avatar {
+    width: 50px;
+    height: 50px;
+  }
+  .am-list-brief {
+    div {
+      display: flex;
+      margin-bottom: 10px;
+      white-space: pre-wrap;
+      span:first-child {
+        margin-right: 10px;
+        &::after {
+          content: ' : ';
+        }
+      }
+      span:last-child {
+        flex: 1;
+      }
+    }
+  }
+}
