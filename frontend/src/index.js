@@ -7,6 +7,9 @@ import store from '@/store';
 // 引入根组件
 import App from '@/App';
 
+// 测试 websocket
+import '@/test/sockio-test';
+
 ReactDOM.render(
   <main>
     {/* 将 store 作为 prop 传入, 即可在所有组件中使用 store */}

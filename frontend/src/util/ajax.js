@@ -10,28 +10,14 @@ export default function ajax(method, url, data = {}) {
   return new Promise(async (resolve, reject) => {
     // axios response 对象
     let response;
-    // 拼接 url query 参数
-    let dataStr = '';
-    if (JSON.stringify(data) !== '{}') {
-      Object.keys(data).forEach(key => {
-        dataStr += key + '=' + data[key] + '&';
-      });
-      dataStr = dataStr.substring(0, dataStr.lastIndexOf('&'));
-    }
     try {
       switch (method) {
         case 'GET':
-          if (dataStr !== '') {
-            if (url.indexOf('?') === '-1') {
-              url += '?' + dataStr;
-            } else {
-              url += '&' + dataStr;
-            }
-          }
           // 发送 get
           response = await axios({
             method,
-            url
+            url,
+            params: data
           });
           break;
         case 'POST':

@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import permission from '@/util/permission';
 import Loadable from 'react-loadable';
+import '@/page/home/index.scss';
 
 // 非路由组件
 import CommonErrorNotFound from '@/component/common/error/not-found';

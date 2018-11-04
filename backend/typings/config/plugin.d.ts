@@ -7,3 +7,4 @@ import 'egg-validate';
 import 'egg-cors';
 import 'egg-redis';
 import 'egg-session-redis';
+import 'egg-socket.io';

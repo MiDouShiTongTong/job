@@ -27,6 +27,11 @@ const plugin: EggPlugin = {
   sessionRedis: {
     enable: true,
     package: 'egg-session-redis'
+  },
+
+  io: {
+    enable: true,
+    package: 'egg-socket.io'
   }
 };
 

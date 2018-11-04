@@ -6,8 +6,8 @@ import permission from '../util/permission';
 @Prefix('/user')
 export default class UserController extends Controller {
 
-  @Get('/userInfoList')
-  public async selectUserInfoList() {
+  @Get('/')
+  public async selectUserList() {
     const { ctx, service } = this;
     // 判断是否登陆
     permission.validateSignIn(ctx);

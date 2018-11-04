@@ -7,10 +7,10 @@ import config from '@/config';
  */
 export default {
   // 查询用户列表
-  selectUserInfoList(data) {
+  selectUserList(data) {
     return ajax(
       'GET',
-      `${config.API_ROOT}/user/userInfoList`,
+      `${config.API_ROOT}/user`,
       data
     );
   }

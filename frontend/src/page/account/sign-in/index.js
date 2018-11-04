@@ -82,7 +82,7 @@ export default connect(
           <NavBar>登陆账户</NavBar>
           <Logo/>
           <WingBlank size="lg">
-            <List renderHeader={() => '基本信息'}>
+            <List>
               <InputItem
                 type="text"
                 placeholder="请输入用户名"

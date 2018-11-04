@@ -77,7 +77,7 @@ export default connect(
                           <span>{userInfo.position}</span>
                         </div>
                         <div>
-                          <span>个人描述</span>
+                          <span>个人介绍</span>
                           <span>{userInfo.description}</span>
                         </div>
                       </List.Item.Brief>

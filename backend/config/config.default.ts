@@ -53,6 +53,16 @@ export default (appInfo: EggAppInfo) => {
     timezone: '+08:00'
   };
 
+  config.io = {
+    init: {}, // passed to engine.io
+    namespace: {
+      '/chat': {
+        connectionMiddleware: [],
+        packetMiddleware: [],
+      }
+    },
+  };
+
   return {
     ...config
   };

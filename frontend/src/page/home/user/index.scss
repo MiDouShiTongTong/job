@@ -1,0 +1,16 @@
+.home-user-container {
+  .am-card-body {
+    div {
+      display: flex;
+      margin-bottom: 10px;
+      color: #666;
+      span:first-child {
+        width: 75px;
+        text-align: right;
+      }
+      span:last-child {
+        flex: 1;
+      }
+    }
+  }
+}
