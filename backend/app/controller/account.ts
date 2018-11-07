@@ -8,7 +8,7 @@ import permission from '../util/permission';
 @Prefix('/account')
 export default class AccountController extends Controller {
   /**
-   * 用户注册
+   * 注册
    *
    */
   @Post('/signUp')
@@ -65,6 +65,10 @@ export default class AccountController extends Controller {
     }
   }
 
+  /**
+   * 登陆
+   *
+   */
   @Post('/signIn')
   public async signIn() {
     const { ctx, service } = this;
@@ -196,7 +200,7 @@ export default class AccountController extends Controller {
     } else {
       // 获取请求参数, 更新用户信息
       const { avatar, company, position, salary, description } = ctx.request.body;
-      await service.user.update({
+      await service.user.updateMany({
         avatar: avatar,
         company: company,
         position: position,

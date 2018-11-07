@@ -8,7 +8,7 @@ export default withRouter(
     state = {
       navList: [
         {
-          path: '/home',
+          path: '/home/user',
           name: '首页',
           icon: 'home'
         },

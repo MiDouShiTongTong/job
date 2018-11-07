@@ -20,8 +20,8 @@ export default connect(
     state = {
       // 表单值
       signInFormValue: {
-        username: '',
-        password: ''
+        username: 'tencent',
+        password: '123456'
       },
       // 表单验证规则
       validateSignInFormValue: new AsyncValidator({

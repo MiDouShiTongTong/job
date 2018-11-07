@@ -1,6 +1,5 @@
 import { Service } from 'egg';
 import { UserModel } from '../model/user';
-import { FindOptions, UpdateOptions } from 'sequelize';
 
 /**
  * user Service
@@ -12,25 +11,28 @@ export default class User extends Service {
    * @param user
    */
   public async insertOne(user: UserModel) {
-    return await this.app.model.User.create(user);
+    const { app } = this;
+    return await app.model.User.create(user);
   }
 
   /**
    * 查询单一用户
    *
-   * @param findOption
+   * @param condition
    */
-  public async selectOne(findOption: FindOptions<any>) {
-    return await this.app.model.User.findOne(findOption);
+  public async selectOne(condition) {
+    const { app } = this;
+    return await app.model.User.findOne(condition);
   }
 
   /**
    * 查找多个用户
    *
-   * @param findOption
+   * @param condition
    */
-  public async selectMany(findOption: FindOptions<any>) {
-    return await this.app.model.User.findAll(findOption);
+  public async selectMany(condition) {
+    const { app } = this;
+    return await app.model.User.findAll(condition);
   }
 
   /**
@@ -39,7 +41,8 @@ export default class User extends Service {
    * @param data
    * @param condition
    */
-  public async update(data, condition: UpdateOptions) {
-    return await this.app.model.User.update(data, condition);
+  public async updateMany(data, condition) {
+    const { app } = this;
+    return await app.model.User.update(data, condition);
   }
 }

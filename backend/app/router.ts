@@ -2,11 +2,10 @@ import { Application } from 'egg';
 import { EggShell } from 'egg-shell-decorators';
 
 export default (app: Application) => {
-  // const { controller, router } = app;
-  // router.get('/', controller.home.index);
-
-  // app.io.of('/chat')
-  app.io.of('/chat').route('chat', app.io.controller.chat.index);
-
+  // router
   EggShell(app, { prefix: '/' });
+
+  // SocketIo router
+  app.io.of('/home/chat').route('receiveChat', app.io.controller.homeChat.receiveChat);
+  app.io.of('/home/chat').route('receiveChatList', app.io.controller.homeChat.receiveChatList);
 };

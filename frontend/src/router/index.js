@@ -6,7 +6,8 @@ import Loadable from 'react-loadable';
 import CommonErrorNotFound from '@/component/common/error/not-found';
 import LoadingRouter from '@/component/common/loading-router';
 
-// 懒加载路由组件
+// 路由组件
+import Chat from '@/page/chat';
 const Home = Loadable({
   loader: () => import('@/page/home'),
   loading: LoadingRouter
@@ -21,19 +22,28 @@ export default class Router extends React.Component {
     routeList: [
       {
         path: '/',
+        redirect: '/home',
         exact: true,
-        redirect: '/home'
       },
       // 首页
       {
         path: '/home',
         component: Home,
+        componentProps: {},
         exact: false
       },
       // 账户相关
       {
         path: '/account',
         component: Account,
+        componentProps: {},
+        exact: false
+      },
+      // 聊天
+      {
+        path: '/chat/:id',
+        component: Chat,
+        componentProps: {},
         exact: false
       }
     ]
@@ -58,7 +68,7 @@ export default class Router extends React.Component {
                   key={index}
                   path={route.path}
                   exact={route.exact}
-                  component={this.insertMeta(route.component, route.meta)}
+                  component={this.insertMeta(route.component, route.componentMeta)}
                 />;
               } else {
                 return <Route

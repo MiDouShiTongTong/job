@@ -42,18 +42,21 @@ export default connect(
         {
           path: '/account/signUp',
           component: AccountSignUp,
+          componentProps: {},
           exact: true
         },
         // 登陆
         {
           path: '/account/signIn',
           component: AccountSignIn,
+          componentProps: {},
           exact: true
         },
         // 普通用户完善基本信息
         {
           path: '/account/person/setting/baseInfo',
           component: AccountPersonSettingBaseInfo,
+          componentProps: {},
           exact: true
         },
         // 企业用户完善基本信息
@@ -82,7 +85,7 @@ export default connect(
                     key={index}
                     path={route.path}
                     exact={route.exact}
-                    component={this.insertMeta(route.component, route.meta)}
+                    component={this.insertMeta(route.component, route.componentMeta)}
                   />;
                 } else {
                   return <Route

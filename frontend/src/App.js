@@ -13,7 +13,7 @@ export default connect(
   state => {
     // mapStateToProps
     return {
-      userInfo: state.account.userInfo
+
     };
   },
   // mapDispatchToProps

@@ -1,28 +1,17 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import permission from '@/util/permission';
-import Loadable from 'react-loadable';
 import '@/page/home/index.scss';
 
 // 非路由组件
 import CommonErrorNotFound from '@/component/common/error/not-found';
-import LoadingRouter from '@/component/common/loading-router';
 import HomeFooter from '@/component/home/footer';
 
 // 路由组件
-const HomeUser = Loadable({
-  loader: () => import('@/page/home/user'),
-  loading: LoadingRouter
-});
-const HomeMessage = Loadable({
-  loader: () => import('@/page/home/message'),
-  loading: LoadingRouter
-});
-const HomeAccount = Loadable({
-  loader: () => import('@/page/home/account'),
-  loading: LoadingRouter
-});
+import HomeUser from '@/page/home/user';
+import HomeMessage from '@/page/home/message';
+import HomeAccount from '@/page/home/account';
 
 export default connect(
   state => {
@@ -39,17 +28,25 @@ export default connect(
       routeList: [
         {
           path: '/home',
+          redirect: '/home/user',
+          exact: true
+        },
+        {
+          path: '/home/user',
           component: HomeUser,
+          componentProps: {},
           exact: true
         },
         {
           path: '/home/message',
           component: HomeMessage,
+          componentProps: {},
           exact: true
         },
         {
           path: '/home/account',
           component: HomeAccount,
+          componentProps: {},
           exact: true
         }
       ]
@@ -61,29 +58,51 @@ export default connect(
       permission.validateSignIn(props);
     }
 
+    // 添加元信息
+    insertMeta = (Component, meta) => {
+      return (props) => <Component meta={meta} {...props}/>;
+    };
+
     render() {
-      const { state } = this;
-      return (
-        <div className="home-container">
-          {/* 路由组件 */}
-          <Switch>
-            {
-              state.routeList.map((route, index) => {
-                return <Route
-                  key={index}
-                  path={route.path}
-                  exact={route.exact}
-                  component={route.component}
-                />;
-              })
-            }
-            {/* 404 */}
-            <Route component={CommonErrorNotFound}/>
-          </Switch>
-          {/* 底部菜单 */}
-          <HomeFooter/>
-        </div>
-      );
+      const { state, props } = this;
+      if (props.userInfo.id) {
+        return (
+          <div className="home-container">
+            {/* 路由组件 */}
+            <Switch>
+              {
+                state.routeList.map((route, index) => {
+                  if (route.redirect === undefined) {
+                    return <Route
+                      key={index}
+                      path={route.path}
+                      exact={route.exact}
+                      component={this.insertMeta(route.component, route.componentMeta)}
+                    />;
+                  } else {
+                    return <Route
+                      key={index}
+                      path={route.path}
+                      exact={route.exact}
+                      render={() => {
+                        return <Redirect to={route.redirect}/>;
+                      }}
+                    />;
+                  }
+                })
+              }
+              {/* 404 */}
+              <Route component={CommonErrorNotFound}/>
+            </Switch>
+            {/* 底部菜单 */}
+            <HomeFooter/>
+          </div>
+        );
+      } else {
+        return (
+          <div>用户未登录</div>
+        );
+      }
     }
   }
 );

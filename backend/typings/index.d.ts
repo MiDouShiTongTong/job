@@ -12,8 +12,8 @@ declare module 'egg' {
   }
 
   interface EggSocketIO {
-    middleware: xxx;
-    controller: xxx;
+    middleware: homeMessage;
+    controller: homeMessage;
   }
 
   interface Namespace {

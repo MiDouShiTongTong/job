@@ -37,6 +37,8 @@ export default connect(
             Toast.hide();
             // 更新 redux
             props.updateUserInfo({});
+            // 跳转登陆页面
+            props.history.push('/');
           }
         }
       ]);
