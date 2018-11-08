@@ -1,7 +1,9 @@
 import React from 'react';
 import { NavBar, WingBlank, WhiteSpace, Result, List, Button, Modal, Toast } from 'antd-mobile';
 import { connect } from 'react-redux';
-import { updateUserInfo } from '@/store/account';
+import { clearAccountState } from '@/store/account';
+import { clearUserState } from '@/store/user';
+import { clearChatState } from '@/store/chat';
 import api from '@/api';
 import '@/page/home/account/index.scss';
 
@@ -14,7 +16,9 @@ export default connect(
   },
   // mapDispatchToProps
   {
-    updateUserInfo
+    clearAccountState,
+    clearUserState,
+    clearChatState
   }
 )(
   class HomeAccount extends React.Component {
@@ -35,8 +39,10 @@ export default connect(
             // 请求退出接口
             await api.account.signOut();
             Toast.hide();
-            // 更新 redux
-            props.updateUserInfo({});
+            // 清空 redux
+            props.clearAccountState();
+            props.clearUserState();
+            props.clearChatState();
             // 跳转登陆页面
             props.history.push('/');
           }

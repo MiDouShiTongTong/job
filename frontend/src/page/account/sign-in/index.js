@@ -20,8 +20,8 @@ export default connect(
     state = {
       // 表单值
       signInFormValue: {
-        username: '小刘啊',
-        password: '123456'
+        username: '',
+        password: ''
       },
       // 表单验证规则
       validateSignInFormValue: new AsyncValidator({
@@ -63,11 +63,11 @@ export default connect(
           if (result.code === '0') {
             // 保存用户信息到 redux
             props.updateUserInfo(result.data);
-            Toast.success('登陆成功 跳转中...', 3, null, true);
+            Toast.success('登陆成功 跳转中...', 1.5, null, true);
             // 跳转到首页
             setTimeout(() => {
               props.history.push('/');
-            }, 3000);
+            }, 1500);
           } else {
             Toast.fail(result.message, 1.5, null, false);
           }
@@ -94,6 +94,11 @@ export default connect(
                 placeholder="请输入密码"
                 defaultValue={state.signInFormValue.password}
                 onChange={(value) => this.changeSignInFormValue('password', value)}
+                onKeyPress={(e) => {
+                  if (e.which === 13) {
+                    this.signIn();
+                  }
+                }}
               >密码</InputItem>
             </List>
             <WhiteSpace size="lg"/>

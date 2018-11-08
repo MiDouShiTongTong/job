@@ -7,6 +7,7 @@ const EMIT_UPDATE_CHAT_LIST = 'emitUpdateChatList';
 const EMIT_CHAT = 'emitChat';
 const UPDATE_CHAT_LIST = 'updateChatList';
 const INSERT_TO_CHAT_LIST = 'insertToChatList';
+const CLEAR_CHAT_STATE = 'clearChatState';
 
 // state
 // init Socket
@@ -75,6 +76,8 @@ export default (state = initState, action = {}) => {
           chatList: currentChatList_
         }
       };
+    case CLEAR_CHAT_STATE:
+      return initState;
     default:
       return {
         ...state
@@ -169,5 +172,12 @@ export const updateSocket = (socket) => {
         socket
       }
     });
+  };
+};
+
+// 初始化状态 ===============================
+export const clearChatState = () => {
+  return {
+    type: CLEAR_CHAT_STATE
   };
 };

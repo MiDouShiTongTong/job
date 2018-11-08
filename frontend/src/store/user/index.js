@@ -2,6 +2,7 @@ import api from '@/api';
 
 // action type
 const UPDATE_HOME_USER_LIST = 'updateHomeUserList';
+const CLEAR_USER_STATE = 'clearUserState';
 
 // state
 // init Socket
@@ -19,6 +20,8 @@ export default (state = initState, action = {}) => {
         ...state,
         ...action.data
       };
+    case CLEAR_USER_STATE:
+      return initState;
     default:
       return {
         ...state
@@ -38,5 +41,12 @@ export const asyncUpdateHomeUserList = (type) => {
         homeUserList: result.data
       }
     });
+  };
+};
+
+// 初始化状态 ===============================
+export const clearUserState = () => {
+  return {
+    type: CLEAR_USER_STATE
   };
 };

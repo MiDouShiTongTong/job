@@ -57,7 +57,7 @@ export default connect(
       const { state, props } = this;
       if (props.userInfo.id) {
         // 初始化用户列表(空的列表或者与当前用户类型一样的列表都要刷新)
-        if (props.homeUserList.length <= 0 || (props.homeUserList.length > 1 && props.homeUserList[0].type === props.userInfo.type)) {
+        if (props.homeUserList.length <= 0) {
           Toast.loading('Loading...', 0);
           await props.asyncUpdateHomeUserList(props.userInfo.type);
           Toast.hide();
@@ -65,13 +65,6 @@ export default connect(
         // 初始化 socket
         if (!props.socket) {
           props.initSocket(props.userInfo.id);
-        } else {
-          // socket 已存在, 但不是当前用户的
-          console.log('refresh socket');
-          if (props.socket.userId !== props.userInfo.id) {
-            props.socket.close();
-            props.initSocket(props.userInfo.id);
-          }
         }
         // 初始化当前消息列表
         if (!props.chatList.hasOwnProperty(state.chatId)) {

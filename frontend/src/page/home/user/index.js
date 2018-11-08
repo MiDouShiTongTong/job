@@ -29,7 +29,7 @@ export default connect(
       // 初始化标题
       let title = type === 1 ? '企业列表' : '求职者列表';
       // 初始化用户列表
-      if (props.homeUserList.length <= 0 || (props.homeUserList.length > 1 && props.homeUserList[0].type === props.userInfo.type)) {
+      if (props.homeUserList.length <= 0) {
         Toast.loading('Loading...', 0);
         await props.asyncUpdateHomeUserList(props.userInfo.type);
         Toast.hide();

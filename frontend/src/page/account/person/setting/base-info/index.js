@@ -113,7 +113,6 @@ export default connect(
             <WhiteSpace size="lg"/>
             <Button
               type="primary"
-              onClick={this.updatePersonBaseInfo}
             >保存</Button>
           </WingBlank>
         </div>

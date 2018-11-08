@@ -3,6 +3,7 @@ import api from '@/api';
 // action type
 // action type 用于定义修改状态的名称
 const UPDATE_USER_INFO = 'updateUserInfo';
+const CLEAR_ACCOUNT_STATE = 'clearAccountState';
 
 // state
 // state 用于记录状态
@@ -21,6 +22,8 @@ export default (state = initState, action = {}) => {
         ...state,
         ...action.data
       };
+    case CLEAR_ACCOUNT_STATE:
+      return initState;
     default:
       return {
         ...state
@@ -50,5 +53,12 @@ export const asyncUpdateUserInfo = () => {
         }
       });
     }
+  };
+};
+
+// 初始化状态 ===============================
+export const clearAccountState = () => {
+  return {
+    type: CLEAR_ACCOUNT_STATE
   };
 };
