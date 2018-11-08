@@ -10,7 +10,6 @@ const INSERT_TO_CHAT_LIST = 'insertToChatList';
 
 // state
 // init Socket
-
 const initState = {
   // socket
   socket: null,
@@ -90,6 +89,8 @@ export const initSocket = (userId) => {
       userId
     }
   });
+  // 保存用户 id, 用于刷新判断
+  socket.userId = userId;
   return async dispatch => {
     // 保存 socket
     dispatch({
