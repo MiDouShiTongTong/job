@@ -20,7 +20,7 @@ export default connect(
     state = {
       // 表单值
       signInFormValue: {
-        username: 'tencent',
+        username: '小刘啊',
         password: '123456'
       },
       // 表单验证规则

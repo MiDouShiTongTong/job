@@ -59,6 +59,7 @@ export default class HomeMessageController extends Controller {
     };
     // 发给数据给收信方以及发信方
     chatSocketList.forEach(chatSocket => {
+      console.log('sendChat-', chatSocket.socket_id);
       nsp.to(chatSocket.socket_id).emit('sendChat', sendData);
     })
   }

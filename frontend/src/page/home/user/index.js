@@ -25,14 +25,13 @@ export default connect(
 
     componentDidMount = async () => {
       const { props } = this;
-      // 初始化页面
-      const type = props.userInfo.type;
-      // 1.标题[求职者用户显示企业, 企业用户显示求职者]
+      const type = parseInt(props.userInfo.type);
+      // 初始化标题
       let title = type === 1 ? '企业列表' : '求职者列表';
-      // 2.用户列表[企业用户显示求职者用户列表, 求职者用户显示企业用户列表]
+      // 初始化用户列表
       if (props.homeUserList.length <= 0) {
         Toast.loading('Loading...', 0);
-        await props.asyncUpdateHomeUserList(type === 1 ? 2 : 1);
+        await props.asyncUpdateHomeUserList(type);
         Toast.hide();
       }
       // 初始化完成, 开始渲染渲染

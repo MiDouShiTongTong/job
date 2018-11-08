@@ -17,8 +17,7 @@ const initState = {
   // 用户相关的 chat 列表
   chatList: {},
   // 未读的数量
-  notReadCount: 0,
-  test: 'dwq'
+  notReadCount: 0
 };
 
 // reducer
@@ -64,7 +63,13 @@ export default (state = initState, action = {}) => {
       const chatId_ = action.data.chatId;
       const chat = action.data.chat;
       const currentChatList_ = JSON.parse(JSON.stringify(state.chatList));
-      currentChatList_[chatId_].push(chat);
+      if (currentChatList_.hasOwnProperty(chatId_)) {
+        // 已展开会话, 添加到数组末尾
+        currentChatList_[chatId_].push(chat);
+      } else {
+        // 未展开会话, 不做任何操作
+        console.log('收到新消息, 但未展开会话 - ', chatId_);
+      }
       return {
         ...state,
         ...{
@@ -93,11 +98,17 @@ export const initSocket = (userId) => {
         socket
       }
     });
+    socket.on('disconnect', () => {
+      console.log('disconnect success');
+      // 断开连接移除 event
+      socket.removeListener('sendChat');
+      socket.removeListener('sendChatList');
+    });
+
     // 监听 socket 事件
     socket.on('connect', () => {
-      // WebSocket 连接完成
-      console.log('connect success!');
-
+      console.log('connect success');
+      // 连接完成添加 event
       // 接收新的消息
       socket.on('sendChat', data => {
         console.log('sendChat - ', data);

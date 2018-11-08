@@ -49,7 +49,9 @@ export default connect(
           componentProps: {},
           exact: true
         }
-      ]
+      ],
+      // 控制是否可以渲染
+      isRender: false
     };
 
     constructor(props) {
@@ -58,14 +60,23 @@ export default connect(
       permission.validateSignIn(props);
     }
 
+    componentDidMount = () => {
+      const { props } = this;
+      if (props.userInfo.id) {
+        this.setState({
+          isRender: true
+        });
+      }
+    };
+
     // 添加元信息
     insertMeta = (Component, meta) => {
       return (props) => <Component meta={meta} {...props}/>;
     };
 
     render() {
-      const { state, props } = this;
-      if (props.userInfo.id) {
+      const { state } = this;
+      if (state.isRender) {
         return (
           <div className="home-container">
             {/* 路由组件 */}
@@ -100,7 +111,7 @@ export default connect(
         );
       } else {
         return (
-          <div>用户未登录</div>
+          <div className="alter">渲染失败!</div>
         );
       }
     }

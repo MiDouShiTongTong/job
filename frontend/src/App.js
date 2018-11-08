@@ -23,7 +23,7 @@ export default connect(
 )(
   class App extends React.Component {
     state = {
-      initComplete: false
+      isRender: false
     };
 
     constructor(props) {
@@ -46,13 +46,13 @@ export default connect(
 
       // 初始化完成, 渲染路由组件
       this.setState({
-        initComplete: true
+        isRender: true
       });
     };
 
     render() {
       const { state } = this;
-      if (state.initComplete) {
+      if (state.isRender) {
         // 初始化应用状态完成, 渲染路由组件
         return (
           <Router/>

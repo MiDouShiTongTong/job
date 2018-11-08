@@ -30,7 +30,7 @@ export default (state = initState, action = {}) => {
 export const asyncUpdateHomeUserList = (type) => {
   return async dispatch => {
     let result = await api.user.selectUserList({
-      type
+      type: type === 1 ? 2 : 1
     });
     dispatch({
       type: UPDATE_HOME_USER_LIST,
