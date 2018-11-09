@@ -1,6 +1,6 @@
 import React from 'react';
 import AsyncValidator from 'async-validator';
-import { NavBar, List, InputItem, Toast } from 'antd-mobile';
+import { NavBar, List, InputItem, Toast, Grid } from 'antd-mobile';
 import BScroll from 'better-scroll';
 import { connect } from 'react-redux';
 import { initSocket, emitChat, emitUpdateChatList } from '@/store/chat';
@@ -36,12 +36,48 @@ export default connect(
           { required: true, message: '不能发送空白消息' }
         ]
       }),
+      emojiList: [
+        { text: '(⌒▽⌒)' },
+        { text: '（￣▽￣）' },
+        { text: '(=・ω・=)' },
+        { text: '(｀・ω・´)' },
+        { text: '（￣▽￣）' },
+        { text: '(〜￣△￣)' },
+        { text: '（ 〜(･∀･)' },
+        { text: '(°∀°)' },
+        { text: 'ﾉ(￣3￣) ╮' },
+        { text: '(￣▽￣)' },
+        { text: '╭(´_ゝ｀)' },
+        { text: '←_←' },
+        { text: '→_→' },
+        { text: '(<_<)' },
+        { text: '(> _ >)' },
+        { text: '(; ¬_¬)' },
+        { text: '("▔□▔)' },
+        { text: '/(ﾟДﾟ≡ﾟдﾟ)!?' },
+        { text: 'Σ(ﾟдﾟ;)Σ' },
+        { text: '( ￣□￣||)' },
+        { text: '(´；ω；`)' },
+        { text: '（/TДT)/' },
+        { text: '(^・ω・^ )' },
+        { text: '(｡･ω･｡)' },
+        { text: '(●￣(ｴ)￣●)' },
+        { text: 'ε=ε=(ノ≧∇≦)ノ' },
+        { text: '(´･_･`)' },
+        { text: '(-_-#)' },
+        { text: '（￣へ￣）' },
+        { text: '(￣ε(#￣) Σ' },
+        { text: '(笑)' },
+        { text: '(汗)' },
+        { text: '(苦笑)' }
+      ],
       // scroll 组件
       chatListContainerScroll: null,
       // 当前与聊天用户的消息列表
       chatId: [this.props.userInfo.id, this.props.match.params.id].sort().join('-'),
       // 当前最新的一条消息
       currentLastItem: null,
+      isShowEmojiContainer: false,
       // 控制是否可以渲染
       isRender: false
     };
@@ -76,6 +112,10 @@ export default connect(
             isRender: true
           });
         }
+        // 监听键盘弹起事件, 让消息列表滚动条到最底部
+        window.addEventListener('resize', () => {
+          this.chatListContainerScrollRefrech();
+        });
       }
     };
 
@@ -93,22 +133,16 @@ export default connect(
       return true;
     };
 
-    // 发送信息滚动条到最底部
+    // 发送信息让消息列表滚动条到最底部
     componentDidUpdate = () => {
       const { state } = this;
       const currentLastItem = document.querySelector('.am-list-item:last-child');
       // 对比是不是有新的消息, 有则将滚动条滑倒最底
       if (currentLastItem !== state.currentLastItem) {
         this.setState({
-          currentLastItem: currentLastItem
+          currentLastItem
         });
-        // 刷新 scroll 重新计算高度
-        state.chatListContainerScroll.refresh();
-        state.chatListContainerScroll.scrollTo(
-          0,
-          state.chatListContainerScroll.maxScrollY,
-          105
-        );
+        this.chatListContainerScrollRefrech();
       }
     };
 
@@ -121,6 +155,24 @@ export default connect(
         probeType: 3,
         swipeTime: 105
       });
+    };
+
+    // 刷新 better-scroll
+    chatListContainerScrollRefrech = () => {
+      const { state } = this;
+      if (state.chatListContainerScroll) {
+        // 刷新 scroll 重新计算高度
+        // 定时器的原因：先修改 class 在刷新
+        setTimeout(() => {
+          state.chatListContainerScroll.refresh();
+          // 滚动条移动到最底部
+          state.chatListContainerScroll.scrollTo(
+            0,
+            state.chatListContainerScroll.maxScrollY,
+            105
+          );
+        }, 0);
+      }
     };
 
     // 处理所有表单的 change 事件
@@ -159,39 +211,42 @@ export default connect(
       if (state.isRender) {
         return (
           <section className="chat-container">
-            <NavBar>
+            <NavBar
+              icon={<span className="material-icons">keyboard_arrow_left</span>}
+              onLeftClick={() => props.history.go(-1)}
+            >
               {props.homeUserList.find(homeUser => homeUser.id === parseInt(props.match.params.id)).username}
             </NavBar>
-            <section className="chat-list-container" ref={this.chatListContainerDidMount}>
+            <section className={`chat-list-container ${props.history.location.pathname.indexOf('emoji') !== -1 ? 'active-action' : ''}`} ref={this.chatListContainerDidMount}>
               <List>
                 {
                   props.chatList.hasOwnProperty(state.chatId)
                     ? props.chatList[state.chatId].length > 0
-                    ? props.chatList[state.chatId].map((chat, index) => {
-                      if (chat.from === props.userInfo.id) {
-                        return (
-                          <List.Item
-                            key={index}
-                            wrap
-                            thumb={chat.from_avatar}
-                            className="my"
-                          >
-                            {chat.content}
-                          </List.Item>
-                        );
-                      } else {
-                        return (
-                          <List.Item
-                            key={index}
-                            wrap
-                            thumb={chat.from_avatar}
-                          >
-                            {chat.content}
-                          </List.Item>
-                        );
-                      }
-                    })
-                    : (<div className="alter">暂无更多消息</div>)
+                      ? props.chatList[state.chatId].map((chat, index) => {
+                        if (chat.from === props.userInfo.id) {
+                          return (
+                            <List.Item
+                              key={index}
+                              wrap
+                              thumb={chat.from_avatar}
+                              className="my"
+                            >
+                              {chat.content}
+                            </List.Item>
+                          );
+                        } else {
+                          return (
+                            <List.Item
+                              key={index}
+                              wrap
+                              thumb={chat.from_avatar}
+                            >
+                              {chat.content}
+                            </List.Item>
+                          );
+                        }
+                      })
+                      : (<div className="alter">暂无更多消息</div>)
                     : ''
                 }
               </List>
@@ -200,16 +255,62 @@ export default connect(
               <InputItem
                 type="text"
                 value={state.chatFormValue.content}
-                extra={<span
-                  onClick={this.sendMessage}
-                >发送</span>}
+                extra={
+                  <div className="action-container">
+                    <span
+                      onClick={() => {
+                        if (props.history.location.pathname.indexOf('emoji') === -1) {
+                          // 添加历史记录 表情容器
+                          props.history.push(`${props.history.location.pathname}/emoji`);
+                          setTimeout(() => {
+                            // 让组件重新计算宽度高度
+                            window.dispatchEvent(new Event('resize'));
+                          }, 0);
+                        } else {
+                          // 回退历史记录 关闭表情容器
+                          props.history.go(-1);
+                        }
+                      }}
+                    >表情</span>
+                    <span
+                      onClick={this.sendMessage}
+                    >发送</span>
+                  </div>
+                }
                 onChange={(value) => this.changeChatFormValue('content', value)}
                 onKeyPress={(e) => {
                   if (e.which === 13) {
                     this.sendMessage();
                   }
                 }}
+                onFocus={() => {
+                  if (props.history.location.pathname.indexOf('emoji') >= 0) {
+                    // 回退历史记录 关闭表情容器
+                    props.history.go(-1);
+                  }
+                }}
               />
+              {
+                props.history.location.pathname.indexOf('emoji') > -1
+                  ? <div className="emoji-container">
+                    <Grid
+                      data={state.emojiList}
+                      isCarousel
+                      columnNum={5}
+                      carouselMaxRow={3}
+                      renderItem={emoji => (
+                        <div className="emoji">{emoji.text}</div>
+                      )}
+                      onClick={eomoji => this.changeChatFormValue('content', `${state.chatFormValue.content} ${eomoji.text} `)}
+                    />
+                  </div>
+                  : null
+              }
+              {
+                props.history.location.pathname.indexOf('emoji') > -1
+                  ? this.chatListContainerScrollRefrech()
+                  : this.chatListContainerScrollRefrech()
+              }
             </div>
           </section>
         );

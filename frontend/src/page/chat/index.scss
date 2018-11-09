@@ -5,6 +5,9 @@
     top: 45px;
     bottom: 45px;
     width: 100%;
+    &.active-action {
+      bottom: 270px;
+    }
     .am-list {
       .am-list-item {
         align-items: flex-start;
@@ -45,19 +48,39 @@
     left: 0;
     z-index: 11111;
     border-top: 1px solid #ddd;
-    .am-input-control {
-      padding-right: 40px;
+    .am-list-line {
+      border-bottom: 0;
+      padding-right: 93px;
+      .am-input-control {
+        padding-right: 40px;
+      }
+      .action-container {
+        display: flex;
+        position: absolute;
+        top: 0;
+        right: 0;
+        span {
+          display: block;
+          padding: 15px;
+          border-left: 1px solid #ddd;
+          cursor: pointer;
+        }
+        span:active {
+          opacity: .5;
+        }
+      }
     }
-    span {
-      display: block;
-      position: absolute;
-      top: 0;
-      right: 0;
-      padding: 15px;
-      border-left: 1px solid #ddd;
-      cursor: pointer;
-      &:active {
-        opacity: .5;
+    .emoji-container {
+      height: 225px;
+      .slider-slide {
+        touch-action: none;
+        .am-grid-item-content {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          white-space: nowrap;
+          cursor: pointer
+        }
       }
     }
   }
