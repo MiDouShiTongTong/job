@@ -16,7 +16,7 @@ export default (appInfo: EggAppInfo) => {
   // cros
   config.cors = {
     // 跨域白名单
-    origin: 'http://10.0.19.67:3000',
+    origin: 'http://127.0.0.1:3000',
     // 允许 携带 cookie
     credentials: true
   };
