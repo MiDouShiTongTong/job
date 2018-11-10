@@ -1,5 +1,5 @@
 import { Service } from 'egg';
-import { ChatModel } from "../model/chat";
+import { ChatModel } from '../model/chat';
 
 /**
  * user Service
@@ -11,8 +11,28 @@ export default class Chat extends Service {
    * @param findOption
    */
   public async selectMany(findOption) {
+
     const { app } = this;
-    let result = await app.model.Chat.findAll(findOption);
+    const result = await app.model.Chat.findAll(findOption);
+    return result;
+  }
+
+  /**
+   * 查找用户消息列表
+   *
+   * @param chatId
+   */
+  public async selectChatList(chatId) {
+    const { app } = this;
+    // 获取用户聊天记录
+    let result = await this.selectMany({
+      where: {
+        chat_id: chatId
+      },
+      order: [
+        ['created_at', 'ASC']
+      ]
+    });
     result = await Promise.all(result.map(async chat => {
       // 获取发送人头像
       const from_user = await app.model.User.findOne({ where: { id: chat.from } });
@@ -25,20 +45,53 @@ export default class Chat extends Service {
   }
 
   /**
-   * 查找用户消息列表
-   *
-   * @param chatId
+   * 查找用户预览消息列表
+   * 
+   * 
+   * @param from
    */
-  public async selectChatList(chatId) {
-    // 获取用户聊天记录
-    return await this.selectMany({
-      where: {
-        chat_id: chatId
-      },
-      order: [
-        ['created_at', 'ASC']
-      ]
-    });
+  public async selectPreviewChatList(from) {
+    const { app } = this;
+    console.log(from);
+    let result = await app.model.query(
+      `SELECT
+        c.\`to\`,
+        c.\`from\`,
+        c.chat_id,
+        c.is_read,
+        c.created_at,
+        SUBSTRING_INDEX(GROUP_CONCAT(c.content ORDER BY c.created_at DESC), ',', 1) as content
+      FROM 
+        chat c,
+        user u
+      WHERE
+        c.\`from\` = ${from} OR c.\`to\` = ${from}
+      GROUP BY
+        c.chat_id`,
+      { model: app.model.Chat }
+    );
+    result = await Promise.all(result.map(async chat => {
+      // 发信人为自己获取收信人头像
+      if (chat.from === from) {
+        let user = await app.model.User.findOne({ where: { id: chat.to } });
+        if (user) {
+          chat.setDataValue('user_id', user.id);
+          chat.setDataValue('username', user.username);
+          chat.setDataValue('avatar', user.avatar);
+        }
+      }
+      // 收信人为自己获取发信人头像
+      if (chat.to === from) {
+        const user = await app.model.User.findOne({ where: { id: chat.from } });
+        if (user) {
+          chat.setDataValue('user_id', user.id);
+          chat.setDataValue('username', user.username);
+          chat.setDataValue('avatar', user.avatar);
+        }
+      }
+      return chat;
+    }));
+    return result;
   }
 
   /**

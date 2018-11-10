@@ -77,7 +77,6 @@ export default connect(
       chatId: [this.props.userInfo.id, this.props.match.params.id].sort().join('-'),
       // 当前最新的一条消息
       currentLastItem: null,
-      isShowEmojiContainer: false,
       // 控制是否可以渲染
       isRender: false
     };
@@ -260,7 +259,7 @@ export default connect(
                     <span
                       onClick={() => {
                         if (props.history.location.pathname.indexOf('emoji') === -1) {
-                          // 添加历史记录 表情容器
+                          // 添加历史记录 打开表情容器
                           props.history.push(`${props.history.location.pathname}/emoji`);
                           setTimeout(() => {
                             // 让组件重新计算宽度高度

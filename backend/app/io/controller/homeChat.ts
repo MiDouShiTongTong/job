@@ -24,7 +24,7 @@ export default class HomeMessageController extends Controller {
       content
     };
     const chat = await service.chat.insertOne(data);
-    // 获取发送方头像
+    // 获取发信方头像
     const fromUser = await service.user.selectOne({
       where: {
         id: from
@@ -54,7 +54,8 @@ export default class HomeMessageController extends Controller {
         chat_id: chat.chat_id,
         is_read: chat.is_read,
         content: chat.content,
-        from_avatar: chat.from_avatar
+        from_avatar: chat.from_avatar,
+        to_avatar: chat.to_avatar
       }
     };
     // 发给数据给收信方以及发信方
@@ -81,6 +82,20 @@ export default class HomeMessageController extends Controller {
   }
 
   /**
+   * 获取预览的 chat 列表
+   */
+  public async receivePreviewChatList() {
+    const { ctx, service } = this;
+    // 接收客户端数据
+    const { from } = ctx.args[0];
+    // 获取预览的 chat 列表
+    const previewChatList = await service.chat.selectPreviewChatList(from);
+    ctx.socket.emit('sendPreviewChatList', {
+      previewChatList
+    });
+  }
+
+  /**
    * 更改聊天记录为以读
    *
    */
@@ -98,12 +113,12 @@ export default class HomeMessageController extends Controller {
     const result = await service.chat.updateMany({
       is_read: 1
     }, {
-      where: {
-        from,
-        to,
-        is_read: 0
-      }
-    });
+        where: {
+          from,
+          to,
+          is_read: 0
+        }
+      });
     response(ctx, {
       header: {
         status: 200

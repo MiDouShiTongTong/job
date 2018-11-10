@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { initSocket } from '@/store/chat';
 import permission from '@/util/permission';
 import '@/page/home/index.scss';
 
@@ -21,7 +22,9 @@ export default connect(
     };
   },
   // mapDispatchToProps
-  {}
+  {
+    initSocket
+  }
 )(
   class Home extends React.Component {
     state = {
@@ -63,6 +66,10 @@ export default connect(
     componentDidMount = () => {
       const { props } = this;
       if (props.userInfo.id) {
+        // 初始化 socket
+        if (!props.socket) {
+          props.initSocket(props.userInfo.id);
+        }
         this.setState({
           isRender: true
         });
