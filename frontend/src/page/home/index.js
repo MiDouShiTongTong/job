@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { initSocket } from '@/store/chat';
+import { initSocket, emitUpdatePreviewChatList } from '@/store/chat';
 import permission from '@/util/permission';
 import '@/page/home/index.scss';
 
@@ -18,12 +18,15 @@ export default connect(
   state => {
     // mapStateToProps
     return {
-      userInfo: state.account.userInfo
+      userInfo: state.account.userInfo,
+      socket: state.chat.socket,
+      previewChatList: state.chat.previewChatList
     };
   },
   // mapDispatchToProps
   {
-    initSocket
+    initSocket,
+    emitUpdatePreviewChatList
   }
 )(
   class Home extends React.Component {
@@ -69,6 +72,10 @@ export default connect(
         // 初始化 socket
         if (!props.socket) {
           props.initSocket(props.userInfo.id);
+        }
+        // 获取预览消息列表
+        if (props.previewChatList.length <= 0) {
+          props.emitUpdatePreviewChatList(props.userInfo.id);
         }
         this.setState({
           isRender: true

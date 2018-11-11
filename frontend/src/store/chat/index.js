@@ -6,10 +6,12 @@ const UPDATE_SOCKET = 'updateSocket';
 const EMIT_UPDATE_CHAT_LIST = 'emitUpdateChatList';
 const EMIT_CHAT = 'emitChat';
 const EMIT_UPDATE_PREVIEW_CHAT_LIST = 'emitUpdatePreviewChatList';
-const UPDATE_PREVIEW_CHAT_LIST = 'updatePreviewChatList';
+const EMIT_UPDATE_PREVIEW_CHAT_LIST_NOT_READ_COUNT = 'emitUpdatePreviewChatListNotReadCount';
 const UPDATE_CHAT_LIST = 'updateChatList';
 const INSERT_TO_CHAT_LIST = 'insertToChatList';
 const INSERT_PREVIEW_CHAT_LIST = 'insertPreviewChatList';
+const UPDATE_PREVIEW_CHAT_LIST = 'updatePreviewChatList';
+const UPDATE_PREVIEW_CHAT_LIST_NOT_READ_COUNT = 'updatePreviewChatListNotReadCount';
 const CLEAR_CHAT_STATE = 'clearChatState';
 
 // state
@@ -59,11 +61,18 @@ export default (state = initState, action = {}) => {
       return {
         ...state
       };
+    case EMIT_UPDATE_PREVIEW_CHAT_LIST_NOT_READ_COUNT:
+      // 发送请求到服务端(改变已读状态)
+      state.socket.emit('receiveChatRead', {
+        to: action.data.to
+      });
+      return {
+        ...state
+      };
     case UPDATE_CHAT_LIST:
       {
         // 修改消息列表
-        const chatId = action.data.chatId;
-        const chatList = action.data.chatList;
+        const { chatId, chatList } = action.data;
         const currentChatList = JSON.parse(JSON.stringify(state.chatList));
         currentChatList[chatId] = chatList;
         return {
@@ -82,8 +91,7 @@ export default (state = initState, action = {}) => {
     case INSERT_TO_CHAT_LIST:
       {
         // 将消息添加到消息列表
-        const chatId = action.data.chatId;
-        const chat = action.data.chat;
+        const { chatId, chat } = action.data;
         const currentChatList = JSON.parse(JSON.stringify(state.chatList));
         if (currentChatList.hasOwnProperty(chatId)) {
           // 已展开会话, 添加到数组末尾
@@ -100,14 +108,18 @@ export default (state = initState, action = {}) => {
         };
       }
     case INSERT_PREVIEW_CHAT_LIST:
-     {
+      {
         // 更新预览消息列表
-        const chat = action.data.chat;
+        const { chat } = action.data;
         const currentPreviewChatList = JSON.parse(JSON.stringify(state.previewChatList));
         const isExist = currentPreviewChatList.find(previewChat => {
           if (previewChat.chat_id === chat.chat_id) {
             // 更新预览消息
             previewChat.content = chat.content;
+            // 如果是收信方, 添加未读状态
+            if (chat.to === state.socket.userId) {
+              previewChat.not_read_count += 1;
+            }
             return true;
           }
           return false;
@@ -116,7 +128,8 @@ export default (state = initState, action = {}) => {
           // 暂无预览消息, 同步预览消息
           // 发送请求到服务端(获取预览消息列表), 触发 UPDATE_PREVIEW_CHAT_LIST
           state.socket.emit('receivePreviewChatList', {
-            from: chat.from
+            // 获取收信方(当前登录用户)的预览消息列表
+            from: state.socket.userId
           });
         }
         return {
@@ -125,7 +138,22 @@ export default (state = initState, action = {}) => {
             previewChatList: currentPreviewChatList
           }
         };
-     }
+      }
+    case UPDATE_PREVIEW_CHAT_LIST_NOT_READ_COUNT:
+      const { chatId, readCount } = action.data;
+      // 更新预览消息列表
+      const currentPreviewChatList = JSON.parse(JSON.stringify(state.previewChatList));
+      currentPreviewChatList.forEach(previewChat => {
+        if (previewChat.chat_id === chatId) {
+          previewChat.not_read_count -= readCount;
+        }
+      });
+      return {
+        ...state,
+        ...{
+          previewChatList: currentPreviewChatList
+        }
+      };
     case CLEAR_CHAT_STATE:
       return initState;
     default:
@@ -142,7 +170,7 @@ export const initSocket = (userId) => {
       userId
     }
   });
-  // 保存用户 id, 用于刷新判断
+  // 保存用户 id, 用于刷新预览列表
   socket.userId = userId;
   return async dispatch => {
     // 保存 socket
@@ -211,6 +239,19 @@ export const initSocket = (userId) => {
           }
         });
       });
+
+      // 更改已读状态
+      socket.on('sendChatRead', data => {
+        console.log('sendChatRead - ', data);
+        // 修改预览消息列表已读字段
+        dispatch({
+          type: UPDATE_PREVIEW_CHAT_LIST_NOT_READ_COUNT,
+          data: {
+            chatId: data.chatId,
+            readCount: data.readCount
+          }
+        });
+      });
     });
   };
 };
@@ -241,6 +282,15 @@ export const emitUpdatePreviewChatList = (from) => {
     type: EMIT_UPDATE_PREVIEW_CHAT_LIST,
     data: {
       from
+    }
+  };
+};
+
+export const emitUpdatePreviewChatListNotReadCount = (to) => {
+  return {
+    type: EMIT_UPDATE_PREVIEW_CHAT_LIST_NOT_READ_COUNT,
+    data: {
+      to
     }
   };
 };

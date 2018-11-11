@@ -1,6 +1,5 @@
 import { Controller } from 'egg';
 import { Op } from 'sequelize';
-import response from "../../util/response";
 
 export default class HomeMessageController extends Controller {
   /**
@@ -54,8 +53,7 @@ export default class HomeMessageController extends Controller {
         chat_id: chat.chat_id,
         is_read: chat.is_read,
         content: chat.content,
-        from_avatar: chat.from_avatar,
-        to_avatar: chat.to_avatar
+        from_avatar: chat.from_avatar
       }
     };
     // 发给数据给收信方以及发信方
@@ -101,34 +99,29 @@ export default class HomeMessageController extends Controller {
    */
   public async receiveChatRead() {
     const { ctx, service } = this;
-    // 得到请求中的 from
-    const { from } = ctx.request.body;
-    const to = ctx.session.userId;
+    const from = ctx.session.userId;
+    // 获取收信方
+    const { to } = ctx.args[0];
     /**
      * 更新 chat 为以读
      *
-     * 根据请求数据中的(from), 当前登陆的用户id(to) 作为基本修改的条件
+     * 只改变收信方为自己的数据
      *
      */
     const result = await service.chat.updateMany({
       is_read: 1
     }, {
         where: {
-          from,
-          to,
+          from: to,
+          to: from,
           is_read: 0
         }
-      });
-    response(ctx, {
-      header: {
-        status: 200
-      },
-      body: {
-        code: '0',
-        data: {
-          affected_row: result[0]
-        }
       }
+    );
+      
+    ctx.socket.emit('sendChatRead', {
+      chatId: [from, to].sort().join('-'),
+      readCount: result[0]
     });
   }
 }

@@ -133,7 +133,7 @@ export default connect(
               <TextareaItem
                 title="职位描述"
                 placeholder="请输入职位描述"
-                defaultValupe={state.enterpriseBaseInfoFormValue.description}
+                defaultValue={state.enterpriseBaseInfoFormValue.description}
                 onChange={(value) => this.changeEnterpriseBaseFormValue('description', value)}
                 rows="3"
                 autoHeight

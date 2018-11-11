@@ -55,38 +55,44 @@ export default class Chat extends Service {
     console.log(from);
     let result = await app.model.query(
       `SELECT
-        c.\`to\`,
-        c.\`from\`,
-        c.chat_id,
-        c.is_read,
-        c.created_at,
-        SUBSTRING_INDEX(GROUP_CONCAT(c.content ORDER BY c.created_at DESC), ',', 1) as content
-      FROM 
-        chat c,
-        user u
+        c1.\`to\`,
+        c1.\`from\`,
+        c1.chat_id,
+        c1.created_at,
+        SUBSTRING_INDEX(GROUP_CONCAT(c1.content ORDER BY c1.created_at DESC), ',', 1) as content,
+        (
+          SELECT
+            COUNT(id)
+          FROM
+            chat c2
+          WHERE
+            c2.chat_id = c1.chat_id
+          AND
+            c2.is_read = 0
+          AND
+		    	  c2.to = ${from}
+        ) AS not_read_count
+      FROM
+        chat c1
       WHERE
-        c.\`from\` = ${from} OR c.\`to\` = ${from}
+        c1.\`from\` = ${from} OR c1.\`to\` = ${from}
       GROUP BY
-        c.chat_id`,
+        c1.chat_id`,
       { model: app.model.Chat }
     );
     result = await Promise.all(result.map(async chat => {
-      // 发信人为自己获取收信人头像
+      // 发信人为自己获取收信人内容
       if (chat.from === from) {
         let user = await app.model.User.findOne({ where: { id: chat.to } });
         if (user) {
-          chat.setDataValue('user_id', user.id);
-          chat.setDataValue('username', user.username);
-          chat.setDataValue('avatar', user.avatar);
+          chat.setDataValue('user', user);
         }
       }
-      // 收信人为自己获取发信人头像
+      // 收信人为自己获取发信人内容
       if (chat.to === from) {
         const user = await app.model.User.findOne({ where: { id: chat.from } });
         if (user) {
-          chat.setDataValue('user_id', user.id);
-          chat.setDataValue('username', user.username);
-          chat.setDataValue('avatar', user.avatar);
+          chat.setDataValue('user', user);
         }
       }
       return chat;

@@ -3,7 +3,7 @@ import AsyncValidator from 'async-validator';
 import { NavBar, List, InputItem, Toast, Grid } from 'antd-mobile';
 import BScroll from 'better-scroll';
 import { connect } from 'react-redux';
-import { initSocket, emitChat, emitUpdateChatList } from '@/store/chat';
+import { initSocket, emitUpdateChatList, emitChat, emitUpdatePreviewChatListNotReadCount } from '@/store/chat';
 import { asyncUpdateHomeUserList } from '@/store/user';
 import permission from '@/util/permission';
 import '@/page/chat/index.scss';
@@ -20,10 +20,11 @@ export default connect(
   },
   // mapDispatchToProps
   {
+    asyncUpdateHomeUserList,
     initSocket,
-    emitChat,
     emitUpdateChatList,
-    asyncUpdateHomeUserList
+    emitChat,
+    emitUpdatePreviewChatListNotReadCount
   }
 )(
   class ChatMessage extends React.Component {
@@ -134,7 +135,7 @@ export default connect(
 
     // 发送信息让消息列表滚动条到最底部
     componentDidUpdate = () => {
-      const { state } = this;
+      const { state, props } = this;
       const currentLastItem = document.querySelector('.am-list-item:last-child');
       // 对比是不是有新的消息, 有则将滚动条滑倒最底
       if (currentLastItem !== state.currentLastItem) {
@@ -142,6 +143,11 @@ export default connect(
           currentLastItem
         });
         this.chatListContainerScrollRefrech();
+        // 收信方为自己
+        if (currentLastItem && currentLastItem.className.indexOf('my') === -1) {
+          // 更新已读状态
+          props.emitUpdatePreviewChatListNotReadCount(props.match.params.id);
+        }
       }
     };
 
