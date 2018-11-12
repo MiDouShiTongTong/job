@@ -74,7 +74,7 @@ export default connect(
       ],
       // scroll 组件
       chatListContainerScroll: null,
-      // 当前与聊天用户的消息列表
+      // chat_id
       chatId: [this.props.userInfo.id, this.props.match.params.id].sort().join('-'),
       // 当前最新的一条消息
       currentLastItem: null,
@@ -114,7 +114,7 @@ export default connect(
         }
         // 监听键盘弹起事件, 让消息列表滚动条到最底部
         window.addEventListener('resize', () => {
-          this.chatListContainerScrollRefrech();
+          this.chatListContainerScrollRefresh();
         });
       }
     };
@@ -142,7 +142,7 @@ export default connect(
         this.setState({
           currentLastItem
         });
-        this.chatListContainerScrollRefrech();
+        this.chatListContainerScrollRefresh();
         // 收信方为自己
         if (currentLastItem && currentLastItem.className.indexOf('my') === -1) {
           // 更新已读状态
@@ -163,7 +163,7 @@ export default connect(
     };
 
     // 刷新 better-scroll
-    chatListContainerScrollRefrech = () => {
+    chatListContainerScrollRefresh = () => {
       const { state } = this;
       if (state.chatListContainerScroll) {
         // 刷新 scroll 重新计算高度
@@ -222,36 +222,38 @@ export default connect(
             >
               {props.homeUserList.find(homeUser => homeUser.id === parseInt(props.match.params.id)).username}
             </NavBar>
-            <section className={`chat-list-container ${props.history.location.pathname.indexOf('emoji') !== -1 ? 'active-action' : ''}`} ref={this.chatListContainerDidMount}>
+            <section
+              className={`chat-list-container ${props.history.location.pathname.indexOf('emoji') !== -1 ? 'active-action' : ''}`}
+              ref={this.chatListContainerDidMount}>
               <List>
                 {
                   props.chatList.hasOwnProperty(state.chatId)
                     ? props.chatList[state.chatId].length > 0
-                      ? props.chatList[state.chatId].map((chat, index) => {
-                        if (chat.from === props.userInfo.id) {
-                          return (
-                            <List.Item
-                              key={index}
-                              wrap
-                              thumb={chat.from_avatar}
-                              className="my"
-                            >
-                              {chat.content}
-                            </List.Item>
-                          );
-                        } else {
-                          return (
-                            <List.Item
-                              key={index}
-                              wrap
-                              thumb={chat.from_avatar}
-                            >
-                              {chat.content}
-                            </List.Item>
-                          );
-                        }
-                      })
-                      : (<div className="alter">暂无更多消息</div>)
+                    ? props.chatList[state.chatId].map((chat, index) => {
+                      if (chat.from === props.userInfo.id) {
+                        return (
+                          <List.Item
+                            key={index}
+                            wrap
+                            thumb={chat.from_avatar}
+                            className="my"
+                          >
+                            {chat.content}
+                          </List.Item>
+                        );
+                      } else {
+                        return (
+                          <List.Item
+                            key={index}
+                            wrap
+                            thumb={chat.from_avatar}
+                          >
+                            {chat.content}
+                          </List.Item>
+                        );
+                      }
+                    })
+                    : (<div className="alter">暂无更多消息</div>)
                     : ''
                 }
               </List>
@@ -313,8 +315,8 @@ export default connect(
               }
               {
                 props.history.location.pathname.indexOf('emoji') > -1
-                  ? this.chatListContainerScrollRefrech()
-                  : this.chatListContainerScrollRefrech()
+                  ? this.chatListContainerScrollRefresh()
+                  : this.chatListContainerScrollRefresh()
               }
             </div>
           </section>

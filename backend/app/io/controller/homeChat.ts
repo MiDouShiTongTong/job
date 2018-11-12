@@ -109,8 +109,8 @@ export default class HomeMessageController extends Controller {
      *
      */
     const result = await service.chat.updateMany({
-      is_read: 1
-    }, {
+        is_read: 1
+      }, {
         where: {
           from: to,
           to: from,
@@ -118,7 +118,7 @@ export default class HomeMessageController extends Controller {
         }
       }
     );
-      
+
     ctx.socket.emit('sendChatRead', {
       chatId: [from, to].sort().join('-'),
       readCount: result[0]
