@@ -6,6 +6,6 @@ export default {
     ? dev.API_ROOT
     : prod.API_ROOT,
   HOME_CHAT_SOCKET_API_ROOT: process.env.NODE_ENV === 'development'
-  ? dev.HOME_CHAT_SOCKET_API_ROOT
-  : prod.HOME_CHAT_SOCKET_API_ROOT
+    ? dev.HOME_CHAT_SOCKET_API_ROOT
+    : prod.HOME_CHAT_SOCKET_API_ROOT
 };

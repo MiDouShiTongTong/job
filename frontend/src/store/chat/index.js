@@ -104,7 +104,10 @@ export default (state = initState, action = {}) => {
       });
       if (!isFindPreviewChatList) {
         // 未初始化预览消息列表
-        console.log('未找到预览消息列表 - ', chat);
+        console.log('未找到预览消息列表 - 开始初始化', chat);
+        state.socket.emit('receivePreviewChatList', {
+          from: state.socket.userId
+        });
       }
       return {
         ...state,
@@ -162,6 +165,9 @@ export default (state = initState, action = {}) => {
 // Action
 export const initSocket = (userId) => {
   const socket = io(config.HOME_CHAT_SOCKET_API_ROOT, {
+    path: process.env.NODE_ENV === 'development'
+      ? ''
+      : '/job/api/socket.io',
     query: {
       userId
     }

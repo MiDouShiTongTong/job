@@ -1,4 +1,4 @@
 export default {
-  API_ROOT: 'http://10.0.19.155:8002',
-  HOME_CHAT_SOCKET_API_ROOT: 'ws://10.0.19.155:8002/home/chat'
+  API_ROOT: 'https://project.yyccyy.com/job/api',
+  HOME_CHAT_SOCKET_API_ROOT: 'wss://project.yyccyy.com/home/chat'
 };

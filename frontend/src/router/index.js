@@ -58,7 +58,9 @@ export default class Router extends React.Component {
     const { state } = this;
 
     return (
-      <BrowserRouter>
+      <BrowserRouter
+        basename="/job"
+      >
         {/* 所有路由列表 */}
         <Switch>
           {

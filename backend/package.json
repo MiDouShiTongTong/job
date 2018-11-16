@@ -8,8 +8,8 @@
   },
   "scripts": {
     "start": "egg-scripts start --daemon --title=egg-server-backend",
-    "stop": "egg-scripts stop --title=egg-server-backend",
-    "dev": "egg-bin dev --port=8002 -r egg-ts-helper/register",
+    "stop": "egg-scriptst stop --title=egg-server-backend",
+    "dev": "egg-bin dev --port=3001 -r egg-ts-helper/register",
     "debug": "egg-bin debug -r egg-ts-helper/register",
     "test-local": "egg-bin test -r egg-ts-helper/register",
     "test": "npm run lint -- --fix && npm run test-local",
