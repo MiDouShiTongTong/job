@@ -7,7 +7,7 @@
     "typescript": true
   },
   "scripts": {
-    "start": "egg-scripts start --port=7001 --daemon --title=egg-server-showcase",
+    "start": "egg-scripts start --daemon --title=egg-server-backend",
     "stop": "egg-scripts stop --title=egg-server-backend",
     "dev": "egg-bin dev --port=3001 -r egg-ts-helper/register",
     "debug": "egg-bin debug -r egg-ts-helper/register",
@@ -24,7 +24,7 @@
     "egg": "^2.6.1",
     "egg-cors": "^2.1.1",
     "egg-redis": "^2.0.0",
-    "egg-scripts": "^2.6.0",
+    "egg-scripts": "^2.10.0",
     "egg-sequelize": "^4.1.0",
     "egg-session-redis": "^2.1.0",
     "egg-shell-decorators": "^1.0.7",
