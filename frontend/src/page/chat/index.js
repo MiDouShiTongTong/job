@@ -104,7 +104,7 @@ export default connect(
         }
         // 初始化当前消息列表
         if (!props.chatList.hasOwnProperty(state.chatId)) {
-          props.emitUpdateChatList(state.chatId);
+          props.emitUpdateChatList(this.props.match.params.id);
         }
         // 开始渲染列表
         if (!state.isRender) {
@@ -198,12 +198,11 @@ export default connect(
           Toast.info(errors[0].message, 1, null, false);
         } else {
           // 封装请求数据
-          const from = props.userInfo.id;
           const to = parseInt(props.match.params.id);
           const content = state.chatFormValue.content;
 
           // 发送消息
-          props.emitChat(from, to, content);
+          props.emitChat(to, content);
 
           // 清空输入框
           this.changeChatFormValue('content', '');

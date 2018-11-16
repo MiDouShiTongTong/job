@@ -6,53 +6,37 @@ import { ChatModel } from '../model/chat';
  */
 export default class Chat extends Service {
   /**
-   * 查找聊天信息
-   *
-   * @param findOption
-   */
-  public async selectMany(findOption) {
-
-    const { app } = this;
-    const result = await app.model.Chat.findAll(findOption);
-    return result;
-  }
-
-  /**
    * 查找用户消息列表
    *
    * @param chatId
    */
   public async selectChatList(chatId) {
     const { app } = this;
-    // 获取用户聊天记录
-    let result = await this.selectMany({
-      where: {
-        chat_id: chatId
-      },
-      order: [
-        ['created_at', 'ASC']
-      ]
-    });
-    result = await Promise.all(result.map(async chat => {
-      // 获取发送人头像
-      const from_user = await app.model.User.findOne({ where: { id: chat.from } });
-      if (from_user) {
-        chat.setDataValue('from_avatar', from_user.avatar);
-      }
-      return chat;
-    }));
-    return result;
+    return await app.model.query(
+      `SELECT
+        c.*,
+        u.avatar as from_avatar
+      FROM
+        chat c,
+        user u
+      WHERE
+          c.chat_id = '${chatId}'
+        AND
+          c.from = u.id
+      ORDER BY
+        c.created_at ASC`,
+      { model: app.model.Chat }
+    );
   }
 
   /**
    * 查找用户预览消息列表
-   * 
-   * 
+   *
+   *
    * @param from
    */
   public async selectPreviewChatList(from) {
     const { app } = this;
-    console.log(from);
     let result = await app.model.query(
       `SELECT
         c1.\`to\`,
@@ -80,6 +64,7 @@ export default class Chat extends Service {
         c1.chat_id`,
       { model: app.model.Chat }
     );
+
     result = await Promise.all(result.map(async chat => {
       // 发信人为自己获取收信人内容
       if (chat.from === from) {

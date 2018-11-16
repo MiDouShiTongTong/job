@@ -40,7 +40,7 @@ export default (state = initState, action = {}) => {
       Toast.loading('Loading...', 0);
       // 发送请求到服务端(获取消息列表), 触发 UPDATE_CHAT_LIST
       state.socket.emit('receiveChatList', {
-        chatId: action.data.chatId
+        to: action.data.to
       });
       return {
         ...state
@@ -61,7 +61,6 @@ export default (state = initState, action = {}) => {
     case EMIT_CHAT:
       // 发送请求到服务端(保存消息), 触发 INSERT_CHAT_LIST
       state.socket.emit('receiveChat', {
-        from: action.data.from,
         to: action.data.to,
         content: action.data.content
       });
@@ -259,20 +258,19 @@ export const initSocket = (userId) => {
 };
 
 // 触发 emit ================================
-export const emitUpdateChatList = (chatId) => {
+export const emitUpdateChatList = (to) => {
   return {
     type: EMIT_UPDATE_CHAT_LIST,
     data: {
-      chatId
+      to
     }
   };
 };
 
-export const emitChat = (from, to, content) => {
+export const emitChat = (to, content) => {
   return {
     type: EMIT_CHAT,
     data: {
-      from,
       to,
       content
     }

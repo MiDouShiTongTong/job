@@ -10,7 +10,8 @@ export default class HomeMessageController extends Controller {
     const { app, ctx, service } = this;
 
     // 接收客户端数据
-    const { from, to, content } = ctx.args[0];
+    const from = ctx.session.userId;
+    const { to, content } = ctx.args[0];
     const chatId = [from, to].sort().join('-');
 
     // 持久化数据
@@ -70,7 +71,9 @@ export default class HomeMessageController extends Controller {
   public async receiveChatList() {
     const { ctx, service } = this;
     // 接收客户端数据
-    const { chatId } = ctx.args[0];
+    const from = this.ctx.session.userId;
+    const { to } = ctx.args[0];
+    const chatId = [from, to].sort().join('-');
     // 获取用户之间的消息列表
     const chatList = await service.chat.selectChatList(chatId);
     ctx.socket.emit('sendChatList', {
@@ -98,7 +101,7 @@ export default class HomeMessageController extends Controller {
    *
    */
   public async receiveChatRead() {
-    const { ctx, service } = this;
+    const { ctx, service, app } = this;
     const from = ctx.session.userId;
     // 获取收信方
     const { to } = ctx.args[0];
@@ -119,9 +122,21 @@ export default class HomeMessageController extends Controller {
       }
     );
 
-    ctx.socket.emit('sendChatRead', {
-      chatId: [from, to].sort().join('-'),
-      readCount: result[0]
+    // 获取发送发 socket
+    const chatSocketList = await service.chatSocket.selectMany({
+      where: {
+        user_id: ctx.session.userId
+      }
     });
+
+    const nsp = app.io.of('/home/chat');
+    // 发给数据给所有发送发，标识为以读状态
+    chatSocketList.forEach(chatSocket => {
+      console.log('sendChatRead-', chatSocket.socket_id);
+      nsp.to(chatSocket.socket_id).emit('sendChatRead', {
+        chatId: [from, to].sort().join('-'),
+        readCount: result[0]
+      });
+    })
   }
 }
