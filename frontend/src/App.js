@@ -55,7 +55,7 @@ export default connect(
       if (state.isRender) {
         // 初始化应用状态完成, 渲染路由组件
         return (
-          <Router/>
+          <Router />
         );
       } else {
         // 初始化应用状态未完成, 不渲染路由组件

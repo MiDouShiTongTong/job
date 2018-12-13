@@ -228,31 +228,31 @@ export default connect(
                 {
                   props.chatList.hasOwnProperty(state.chatId)
                     ? props.chatList[state.chatId].length > 0
-                    ? props.chatList[state.chatId].map((chat, index) => {
-                      if (chat.from === props.userInfo.id) {
-                        return (
-                          <List.Item
-                            key={index}
-                            wrap
-                            thumb={chat.from_avatar}
-                            className="my"
-                          >
-                            {chat.content}
-                          </List.Item>
-                        );
-                      } else {
-                        return (
-                          <List.Item
-                            key={index}
-                            wrap
-                            thumb={chat.from_avatar}
-                          >
-                            {chat.content}
-                          </List.Item>
-                        );
-                      }
-                    })
-                    : (<div className="alter">暂无更多消息</div>)
+                      ? props.chatList[state.chatId].map((chat, index) => {
+                        if (chat.from === props.userInfo.id) {
+                          return (
+                            <List.Item
+                              key={index}
+                              wrap
+                              thumb={chat.from_avatar}
+                              className="my"
+                            >
+                              {chat.content}
+                            </List.Item>
+                          );
+                        } else {
+                          return (
+                            <List.Item
+                              key={index}
+                              wrap
+                              thumb={chat.from_avatar}
+                            >
+                              {chat.content}
+                            </List.Item>
+                          );
+                        }
+                      })
+                      : (<div className="alter">暂无更多消息</div>)
                     : ''
                 }
               </List>
@@ -278,9 +278,7 @@ export default connect(
                         }
                       }}
                     >表情</span>
-                    <span
-                      onClick={this.sendMessage}
-                    >发送</span>
+                    <span onClick={this.sendMessage}>发送</span>
                   </div>
                 }
                 onChange={(value) => this.changeChatFormValue('content', value)}
