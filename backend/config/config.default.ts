@@ -16,7 +16,7 @@ export default (appInfo: EggAppInfo) => {
   // cros
   config.cors = {
     // 跨域白名单
-    origin: 'http://192.168.1.156:3000',
+    origin: 'http://10.0.19.175:3000',
     // origin: 'http://192.168.1.156:8080',
     // 允许 携带 cookie
     credentials: true
@@ -34,10 +34,10 @@ export default (appInfo: EggAppInfo) => {
 
   config.redis = {
     client: {
-      host: '127.0.0.1',
-      port: '6379',
+      port: 6379,          // Redis port
+      host: '127.0.0.1',   // Redis host
       password: '',
-      db: '0',
+      db: 0
     },
     agent: true
   };

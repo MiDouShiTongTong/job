@@ -1,6 +1,15 @@
 {
   "extends": "tslint:latest",
   "rules": {
+    "trailing-comma": [true, {
+      "singleline": "ignore",
+      "multiline": {
+        "objects": "ignore",     // <==================
+        "arrays": "ignore",
+        "functions": "ignore",
+        "typeLiterals": "ignore"
+      }
+    }],
     "quotemark": [
       true,
       "single",
